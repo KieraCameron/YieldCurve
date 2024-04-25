@@ -19,7 +19,7 @@ class CSVData:
             while len(parsed_line) < self.number_of_columns:
                 parsed_line.append(None)
             if len(parsed_line) > self.number_of_columns:
-                raise Exception(", ".join(line) + "\nnumber of values in this line exceeds number of values in header")
+                raise Exception(", ".join(parsed_line) + "\nnumber of values in this line exceeds number of values in header")
             csv_data[i] = parsed_line
         return csv_data
 
