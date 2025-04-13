@@ -3,10 +3,10 @@ from matplotlib.animation import FuncAnimation
 import math
 import datetime
 import csv
-# test
-# this is a test. github is printin on one line.
+
 class MDate: # stands for Maturity Date
     ONE_MONTH = "1 Mo"
+    ONE_AND_HALF_MONTH = "1.5 Mo"
     TWO_MONTH = "2 Mo"
     THREE_MONTH = "3 Mo"
     FOUR_MONTH = "4 Mo"
@@ -32,9 +32,9 @@ y_limits_per_year = {1990: (2, 10), 1991: (2, 9), 1992: (2, 9), 1993: (2, 9), 19
                      2013: (0, 6), 2014: (0, 6), 2015: (0, 6), 2016: (0, 6), 2017: (0, 6), 2018: (0, 6),
                      2019: (0, 6), 2020: (0, 6), 2021: (0, 6), 2022: (0, 6), 2023: (0, 6)}
 days_list = []
-START_YEAR = 1990
-END_YEAR = 2002
-SKIP = 2
+START_YEAR = 2000
+END_YEAR = 2025
+SKIP = 1
 
 # all mentions of the variable 'date' refers to a datetime object
 # all mentions of the variable 'day' refers to a specific instance of Day
@@ -62,7 +62,7 @@ class Day:
                 year = "19" + year
             else:
                 year = "20" + year
-        return datetime.date(int(year), int(month), int(day))
+        return datetime.datetime(int(year), int(month), int(day))
 
     def __repr__(self):
         s = self.date.strftime("%d %B, %Y") + "\n"
@@ -153,11 +153,11 @@ def display_spread(short_maturity_date, long_maturity_date):
     
 
 
-    start, end = filter_dates(1990, 2023, spx_dict["Date"])
-    earliest = min(spx_dict["Date"][start], dates[0])
-    latest = max(spx_dict["Date"][end-1], dates[-1])
+    #start, end = filter_dates(1990, 2024, spx_dict["Date"])
+    #earliest = min(spx_dict["Date"][start], dates[0])
+    #latest = max(spx_dict["Date"][end-1], dates[-1])
     #spx_ax.set_xlim(earliest, latest)
-    yield_ax.set_xlim(earliest, latest)
+    #yield_ax.set_xlim(earliest, latest)
 
 
     #spx_ax.plot(spx_dict["Date"][start:end], spx_dict["Close"][start:end], label="spx", color="blue")
@@ -214,7 +214,7 @@ if __name__ == "__main__":
         yield_history = csv.DictReader(csvfile)
         for day in yield_history:
             days_list.append(Day(day))
-    days = iter(days_list)
+    days = iter(reversed(days_list))
     """
     yield_curve = extractcsv.CSVData(YIELD_CURVE_FILE_PATH)
     for i in range(1, len(yield_curve.parsed_data)): # start at 1 because first row is the header
@@ -236,6 +236,6 @@ if __name__ == "__main__":
     
     """
     
-    ani = FuncAnimation(mat.gcf(), plot_yield_curve, interval=1, repeat=False)
-    mat.show()
-    #display_spread(MDate.THREE_MONTH, MDate.TEN_YEAR)
+    #ani = FuncAnimation(mat.gcf(), plot_yield_curve, interval=1, repeat=False)
+    #mat.show()
+    display_spread(MDate.THREE_MONTH, MDate.TEN_YEAR)
