@@ -1,13 +1,13 @@
 import csv
 from tabulate import tabulate
-from datetime import date
+import datetime
 import matplotlib.pyplot as mat
 
-YIELD_DATA_FILENAME = "yield-curve-rates-1990-2024.csv"
+YIELD_DATA_FILES = ["yield-curve-rates-1990-2024.csv"]
 
 class MDate: # stands for Maturity Date
     ONE_MONTH = "1 Mo"
-    #ONE_AND_HALF_MONTH = "1.5 Mo"
+    ONE_AND_HALF_MONTH = "1.5 Mo"
     TWO_MONTH = "2 Mo"
     THREE_MONTH = "3 Mo"
     FOUR_MONTH = "4 Mo"
@@ -23,9 +23,13 @@ class MDate: # stands for Maturity Date
 
 # need to be able to combine csvs.
 
+
+
+
+
 class YieldData:
-    def __init__(self, filepath):
-        self.filepath = filepath
+    def __init__(self, filepaths):
+        self.files = filepaths
         self.array = None
         self.heading = None
         with open(filepath) as csvfile:
@@ -36,6 +40,27 @@ class YieldData:
         self.numcols = len(self.heading)
         self.numrows = len(self.array)
         self.dates = self.by_maturity["Date"] # should not be string literal
+
+    def combine_files(self, filepaths):
+        # if the last date is before the first date, prepend the data.
+        # if the first date if the last date, append.
+
+        full_data = list()
+        raw_data = None
+        for filepath in filepaths:
+            with open(filepath) as csvfile:
+                raw_data = csv.reader(csvfile)
+                heading = next(raw_data)
+                heading = [x.title() for x in heading]
+                raw_data = self.parse_data(raw_data)
+            if full_data == list():
+                full_data += raw_data
+            elif full_data[-1][0] < raw_data
+
+    def insert_column(self, index, full_data):
+        for linenumber, line in enumerate(full_data):
+            full_data[linenumber] = line[:index] + [None] + line[index:]
+        return full_data
 
 
     def __repr__(self):
@@ -49,17 +74,17 @@ class YieldData:
                 year = "19" + year
             else:
                 year = "20" + year
-        return date(int(year), int(month), int(day))
+        return datetime.date(int(year), int(month), int(day))
 
     def parse_data(self, raw_data):
-        for line_number, line in enumerate(raw_data[1:], start=1): # 1: skips the heading
+        for line_number, line in enumerate(raw_data):
             raw_data[line_number][0] = self.parse_date(line[0])
             for i, yield_interest in enumerate(line[1:], start=1): # 1: skips the date
                 if yield_interest == "":
                     raw_data[line_number][i] = None
                 else:
                     raw_data[line_number][i] = float(yield_interest)
-        return raw_data[0], raw_data[1:]
+        return raw_data
 
     def structure_data_by_date(self):
         data_by_date = dict()
@@ -99,13 +124,13 @@ class SpreadGraph:
             self.highlight_recessions()
 
     def highlight_recessions(self):
-        mat.axvspan(date(2020, 2, 1), date(2020, 4, 30), color="grey", alpha=0.4, edgecolor=None)  # covid
-        mat.axvspan(date(2007, 12, 1), date(2009, 6, 30), color="grey", alpha=0.4, edgecolor=None)  # gfc
-        mat.axvspan(date(2001, 3, 1), date(2001, 11, 30), color="grey", alpha=0.4, edgecolor=None)  # dot-com
-        mat.axvspan(date(1990, 7, 1), date(1991, 3, 31), color="grey", alpha=0.4, edgecolor=None)  # 1990s
+        mat.axvspan(datetime.date(2020, 2, 1), datetime.date(2020, 4, 30), color="grey", alpha=0.4, edgecolor=None)  # covid
+        mat.axvspan(datetime.date(2007, 12, 1), datetime.date(2009, 6, 30), color="grey", alpha=0.4, edgecolor=None)  # gfc
+        mat.axvspan(datetime.date(2001, 3, 1), datetime.date(2001, 11, 30), color="grey", alpha=0.4, edgecolor=None)  # dot-com
+        mat.axvspan(datetime.date(1990, 7, 1), datetime.date(1991, 3, 31), color="grey", alpha=0.4, edgecolor=None)  # 1990s
 
 
-yield_data = YieldData(YIELD_DATA_FILENAME)
+yield_data = YieldData(YIELD_DATA_FILES)
 
 #yield_data.graph(MDate.THREE_MONTH, MDate.TEN_YEAR)
 recession_predictor = SpreadGraph(yield_data.dates, yield_data.get_spread(MDate.THREE_MONTH, MDate.TEN_YEAR))
