@@ -109,12 +109,7 @@ def get_day(start_year=0, end_year=9999, skip=0):
             day = next(days)
 
     return day
-"""
-
-spx_dict = dict()
-with open("spx.csv") as spx_raw_data:
-    spx_dict = extract_csv_data_col(spx_raw_data)
-    
+"""    
 
 def filter_dates(start_year, end_year, dates_list):
     start_index = None
@@ -236,6 +231,6 @@ if __name__ == "__main__":
     
     """
     
-    #ani = FuncAnimation(mat.gcf(), plot_yield_curve, interval=1, repeat=False)
-    #mat.show()
-    display_spread(MDate.THREE_MONTH, MDate.TEN_YEAR)
+    ani = FuncAnimation(mat.gcf(), plot_yield_curve, interval=1, repeat=False)
+    mat.show()
+    #display_spread(MDate.THREE_MONTH, MDate.TEN_YEAR)
