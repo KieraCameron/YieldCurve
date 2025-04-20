@@ -1,59 +1,6 @@
-class Row:
-    def __init__(self, header: list, unique_id, values):
-        self.unique_id = unique_id
-        self.values = values
-        self.header = header
-
-    def __getitem__(self, key):
-        if key in self.header:
-            index = self.header.find(key)
-            return self.values[index]
-        else:
-            raise KeyError(f"The key '{key}' does not exist")
-
-    def __setitem__(self, key, value):
-        if key in self.header:
-            index = self.header.find(key)
-            self.values[index] = value
-        else:
-            raise KeyError(f"The key '{key}' does not exist")
-
-    def __iter__(self):
-        for v in self.values:
-            yield v
-
-    def __repr__(self):
-        return f"Row({self.values})"
 
 
-class Column:
-    def __init__(self, label, unique_ids, values, table):
-        self.unique_ids = unique_ids
-        self.values = values
-        self.label = label
-        self.table = table
-
-    def __getitem__(self, key):
-        if key in self.unique_ids:
-            index = self.unique_ids.find(key)
-            return self.values[index]
-        else:
-            raise KeyError(f"The key '{key}' does not exist")
-
-    def __setitem__(self, key, value):
-        if key in self.unique_ids:
-            index = self.unique_ids.find(key)
-            self.values[index] = value
-            
-        else:
-            raise KeyError(f"The key '{key}' does not exist")
-
-    def __iter__(self):
-        for v in self.values:
-            yield v
-
-    def __repr__(self):
-        return f"Row({self.values})"
+a.__getitem__(str).__getitem__(str)
 
 
 class Table:
@@ -87,4 +34,59 @@ class Table:
             self.by_column[key] = value
         else:
             raise KeyError(f"The key '{key}' does not exist")
+
+    class Row:
+        def __init__(self, header: list, unique_id, values):
+            self.unique_id = unique_id
+            self.values = values
+            self.header = header
+
+        def __getitem__(self, key):
+            if key in self.header:
+                index = self.header.find(key)
+                return self.values[index]
+            else:
+                raise KeyError(f"The key '{key}' does not exist")
+
+        def __setitem__(self, key, value):
+            if key in self.header:
+                index = self.header.find(key)
+                self.values[index] = value
+            else:
+                raise KeyError(f"The key '{key}' does not exist")
+
+        def __iter__(self):
+            for v in self.values:
+                yield v
+
+        def __repr__(self):
+            return f"Row({self.values})"
+
+    class Column:
+        def __init__(self, label, unique_ids, values, table):
+            self.unique_ids = unique_ids
+            self.values = values
+            self.label = label
+            self.table = table
+
+        def __getitem__(self, key):
+            if key in self.unique_ids:
+                index = self.unique_ids.find(key)
+                return self.values[index]
+            else:
+                raise KeyError(f"The key '{key}' does not exist")
+
+        def __setitem__(self, key, value):
+            if key in self.unique_ids:
+                index = self.unique_ids.find(key)
+                self.values[index] = value
+            else:
+                raise KeyError(f"The key '{key}' does not exist")
+
+        def __iter__(self):
+            for v in self.values:
+                yield v
+
+        def __repr__(self):
+            return f"Row({self.values})"
 
